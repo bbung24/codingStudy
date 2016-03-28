@@ -21,6 +21,31 @@ class Solution(object):
         import numpy.random as nprnd
         self.test_list = nprnd.randint(1000, size=10000)
 
+    def anotherTry(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        rank, N, res = {val: i + 1 for i, val in enumerate(sorted(nums))}, len(nums), []
+        BITree = [0] * (N + 1)
+
+        def update(i):
+            while i <= N:
+                BITree[i] += 1
+                i += (i & -i)
+
+        def getSum(i):
+            s = 0
+            while i:
+                s += BITree[i]
+                i -= (i & -i)
+            return s
+
+        for x in reversed(nums):
+            res += getSum(rank[x] - 1),
+            update(rank[x])
+        return res[::-1]
+
     def betterCountSmaller(self, nums):
         """
         :type nums: List[int]
@@ -49,13 +74,17 @@ class Solution(object):
         print self.betterCountSmaller(self.test_list)
     def test(self):
         print self.countSmaller(self.test_list)
+    def another_test(self):
+        print self.anotherTry(self.test_list)
 
 if __name__ == "__main__":
     test = Solution()
     # print test.betterCountSmaller([5,6,2,1,7,8])
     # print test.countSmaller([5,6,2,1,7,8])
+    # print test.anotherTry([5,6,2,1,7,8])
     import timeit
     print timeit.Timer(test.better_test).timeit(number=1)
     print timeit.Timer(test.test).timeit(number=1)
+    print timeit.Timer(test.another_test).timeit(number=1)
     
 
