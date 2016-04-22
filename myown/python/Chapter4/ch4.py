@@ -39,16 +39,74 @@ def checkBinary(tree):
 	except Exception:
 		return False
 	return True
-	
 
+#------------------------------------------------------------------------------
+class DirectedTree(object):
+	def __init__(self, value):
+		self.value = value
+		self.neighbors = []
 
+	def __str__(self):
+		return 'DirectedTree('+str(self.value)+'):'+str(self.neighbors)
 
+	def __repr__(self):
+		return self.__str__()
 
+#------------------------------------------------------------------------------
+def existsRoute(a, b):
+	'''
+	4.2
+	Given a directed graph, design an algorithm to find out whether there is a route
+	between two nodes.
+	'''
+	from Queue import Queue
+	check_list = Queue()
+	checked = set()
+	for n in a.neighbors:
+		if n == b:
+			return True
+		if n not in checked:
+			check_list.put((n,b))
+			checked.add(n)
+	for n in b.neighbors:
+		if n == a:
+			return True
+		if n not in checked:
+			check_list.put((n,a))
+			checked.add(n)
+	print check_list.empty()
+	while not check_list.empty():
+		node, target = check_list.get()
+		print check_list
+		print checked
+		print node
+		for n in node.neighbors:
+			print n
+			if n == target:
+				return True
+			if n not in checked:
+				check_list.put((n, target))
+				checked.add(n)
+	return False
 
-
-
-
-
+def testSet():
+	one = DirectedTree(1)
+	two = DirectedTree(2)
+	three = DirectedTree(3)
+	four = DirectedTree(4)
+	five = DirectedTree(5)
+	six = DirectedTree(6)
+	seven = DirectedTree(7)
+	eight = DirectedTree(8)
+	two.neighbors.append(one)
+	one.neighbors.append(three)
+	one.neighbors.append(four)
+	one.neighbors.append(five)
+	six.neighbors.append(one)
+	six.neighbors.append(seven)
+	seven.neighbors.append(five)
+	eight.neighbors.append(seven)
+	return existsRoute(two, seven)
 
 
 
