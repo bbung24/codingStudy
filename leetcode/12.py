@@ -7,6 +7,10 @@ Input is guaranteed to be within the range from 1 to 3999.
 
 """
 class Solution(object):
+    def __init__(self):
+        self.mapping = { 1000:'M', 900:'CM', 500:'D', 400:'CD', 100:'C', 
+            90:'XC', 50:'L', 40:'XL', 10:'X', 9:'IX', 5:'V', 4:'IV', 1:'I'}
+            
     def intToRoman(self, num):
         """
         :type num: int
@@ -14,13 +18,11 @@ class Solution(object):
         """
         if num == 0:
             return "nulla"
-        mapping = { 1000:'M', 900:'CM', 500:'D', 400:'CD', 100:'C', 
-            90:'XC', 50:'L', 40:'XL', 10:'X', 9:'IX', 5:'V', 4:'IV', 1:'I'}
         output = ""
-        for div in sorted(mapping.keys(), reverse=True):
+        for div in sorted(self.mapping.keys(), reverse=True):
             multiplier = num / div
             num = num % div
-            output += multiplier * mapping[div]
+            output += multiplier * self.mapping[div]
         return output
 
 
