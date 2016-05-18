@@ -15,6 +15,26 @@ class Solution(object):
         :type nums: List[int]
         :rtype: int
         """
+        largest = None
+        largest_count = 0
+        for num in nums:
+            if largest == None:
+                largest = num
+                largest_count = 1
+            elif num != largest:
+                largest_count -= 1
+            else:
+                largest_count += 1
+            if largest_count == 0:
+                largest = num
+                largest_count = 1
+        return largest
+                
+    def majorityElementWithSort(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
         if len(nums) == 0:
         	return None
         nums.sort()
