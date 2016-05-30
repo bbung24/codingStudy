@@ -24,6 +24,13 @@ You may assume that all inputs are consist of lowercase letters a-z.
 
 
 Hint: 
+You would need to optimize your backtracking to pass the larger test. Could you stop backtracking earlier?
+
+If the current candidate does not exist in all words' prefix, you could stop backtracking immediately. 
+What kind of data structure could answer such query efficiently? Does a hash table work? 
+Why or why not? How about a Trie? If you would like to learn how to implement a basic trie, 
+please work on this problem: Implement Trie (Prefix Tree) first.
+
 """
 class Solution(object):
     def findWords(self, board, words):
@@ -32,64 +39,40 @@ class Solution(object):
         :type words: List[str]
         :rtype: List[str]
         """
-        if len(board) == 0 or len(board[0]) == 0 or len(words) == 0:
-          return []
-        first_letters = set([x[0] for x in words])
-        row_length = len(board)
-        col_length = len(board[0])
-        max_word_length = max([len(x) for x in words])
-        result = set([])
-        for row in range(row_length):
-          for col in range(col_length):
-            if board[row][col] in first_letters:
-              visited = set([])
-              visited.add((row,col))
-              word = ''
-              copy_words = [x for x in words]
-              self.find_helper(row, col, word, board, copy_words, visited, result, max_word_length)
-        return sorted(result)
+        if len(board) == 0:
+            return []
+        trie = self.createTrie(words)
+        self.visited = [[False for x in range(len(board[y]))] for y in range(len(board))]
+        self.result = set([])
+        for row in range(len(board)):
+            for col in range(len(board[row])):
+                self.find_helper(row, col, board, '', trie)
+        return sorted(list(self.result))
 
-    def find_helper(self, row, col, word, board, words, visited, result, max_word_length):
-        """
-        :type row: int
-        :type col: int
-        :type word: string
-        :type board: List[List[str]]
-        :type words: List[str]
-        :type visited: List[tuple]
-        """
-        word += board[row][col]
-        self.check_word_exists(word, words, result)
-        if len(result) != len(words) and len(word) <= max_word_length:
-          if row-1 >= 0 and (row-1, col) not in visited:
-            copy_word = word
-            copy_visited = set([x for x in visited])
-            copy_visited.add((row-1, col))
-            self.find_helper(row-1, col, copy_word, board, words, copy_visited, result, max_word_length)
-          if col-1 >= 0 and (row, col-1) not in visited:
-            copy_word = word
-            copy_visited = set([x for x in visited])
-            copy_visited.add((row, col-1))
-            self.find_helper(row, col-1, copy_word, board, words, copy_visited, result, max_word_length)
-          if row+1 < len(board) and (row+1, col) not in visited:
-            copy_word = word
-            copy_visited = set([x for x in visited])
-            copy_visited.add((row+1, col))
-            self.find_helper(row+1, col, copy_word, board, words, copy_visited, result, max_word_length)
-          if col+1 < len(board[0]) and (row, col+1) not in visited:
-            copy_word = word
-            copy_visited = set([x for x in visited])
-            copy_visited.add((row, col+1))
-            self.find_helper(row, col+1, copy_word, board, words, copy_visited, result, max_word_length)
+    def find_helper(self, row, col, board, prefix, t):
+        if '#' in t:
+            self.result.add(prefix)
+        if (0 <= row < len(board) and 0 <= col < len(board[row]) and
+            board[row][col] in t and not self.visited[row][col]):
+                char = board[row][col]
+                self.visited[row][col] = True
+                self.find_helper(row-1, col, board, prefix+char, t[char])
+                self.find_helper(row+1, col, board, prefix+char, t[char])
+                self.find_helper(row, col-1, board, prefix+char, t[char])
+                self.find_helper(row, col+1, board, prefix+char, t[char])
+                self.visited[row][col] = False
 
-    def check_word_exists(self, word, words, result):
-        """
-        :type word: string
-        :type words: List[str]
-        """
-        for w in words:
-          if w == word:
-            result.add(word)
+    def createTrie(self, words):
+        trie = {}
+        t = trie
+        for word in words:
+            for c in word:
+                if not c in t:
+                    t[c] = {}
+                t = t[c]
+            t['#'] = {}
+            t = trie
+        return trie
 
 if __name__ == "__main__":
     test = Solution()
@@ -103,9 +86,26 @@ if __name__ == "__main__":
     result = test.findWords(board,words)
     # Should print ["eat","oath"]
     print result
-    words = ["baabab","abaaaa","abaaab","ababba","aabbab","aabbba","aabaab"]
-    board = ["bbaabaabaaaaabaababaaaaababb","aabbaaabaaabaabaaaaaabbaaaba","babaababbbbbbbaabaababaabaaa","bbbaaabaabbaaababababbbbbaaa","babbabbbbaabbabaaaaaabbbaaab","bbbababbbbbbbababbabbbbbabaa","babababbababaabbbbabbbbabbba","abbbbbbaabaaabaaababaabbabba","aabaabababbbbbbababbbababbaa","aabbbbabbaababaaaabababbaaba","ababaababaaabbabbaabbaabbaba","abaabbbaaaaababbbaaaaabbbaab","aabbabaabaabbabababaaabbbaab","baaabaaaabbabaaabaabababaaaa","aaabbabaaaababbabbaabbaabbaa","aaabaaaaabaabbabaabbbbaabaaa","abbaabbaaaabbaababababbaabbb","baabaababbbbaaaabaaabbababbb","aabaababbaababbaaabaabababab","abbaaabbaabaabaabbbbaabbbbbb","aaababaabbaaabbbaaabbabbabab","bbababbbabbbbabbbbabbbbbabaa","abbbaabbbaaababbbababbababba","bbbbbbbabbbababbabaabababaab","aaaababaabbbbabaaaaabaaaaabb","bbaaabbbbabbaaabbaabbabbaaba","aabaabbbbaabaabbabaabababaaa","abbababbbaababaabbababababbb","aabbbabbaaaababbbbabbababbbb","babbbaabababbbbbbbbbaabbabaa"]
-    result = test.findWords(board,words)
+    board = ["aa"]
+    words = ["a"]
+    result = test.findWords(board, words)
     print result
-    result = test.findWords([], [])
+    board = ["aaaa","aaaa","aaaa"]
+    words = ["aaaaaaaaaaaa","aaaaaaaaaaaaa","aaaaaaaaaaab"]
+    result = test.findWords(board, words)
     print result
+    # words = ["baabab","abaaaa","abaaab","ababba","aabbab","aabbba","aabaab"]
+    # board = ["bbaabaabaaaaabaababaaaaababb","aabbaaabaaabaabaaaaaabbaaaba","babaababbbbbbbaabaababaabaaa",
+    #          "bbbaaabaabbaaababababbbbbaaa","babbabbbbaabbabaaaaaabbbaaab","bbbababbbbbbbababbabbbbbabaa",
+    #          "babababbababaabbbbabbbbabbba","abbbbbbaabaaabaaababaabbabba","aabaabababbbbbbababbbababbaa",
+    #          "aabbbbabbaababaaaabababbaaba","ababaababaaabbabbaabbaabbaba","abaabbbaaaaababbbaaaaabbbaab",
+    #          "aabbabaabaabbabababaaabbbaab","baaabaaaabbabaaabaabababaaaa","aaabbabaaaababbabbaabbaabbaa",
+    #          "aaabaaaaabaabbabaabbbbaabaaa","abbaabbaaaabbaababababbaabbb","baabaababbbbaaaabaaabbababbb",
+    #          "aabaababbaababbaaabaabababab","abbaaabbaabaabaabbbbaabbbbbb","aaababaabbaaabbbaaabbabbabab",
+    #          "bbababbbabbbbabbbbabbbbbabaa","abbbaabbbaaababbbababbababba","bbbbbbbabbbababbabaabababaab",
+    #          "aaaababaabbbbabaaaaabaaaaabb","bbaaabbbbabbaaabbaabbabbaaba","aabaabbbbaabaabbabaabababaaa",
+    #          "abbababbbaababaabbababababbb","aabbbabbaaaababbbbabbababbbb","babbbaabababbbbbbbbbaabbabaa"]
+    # result = test.findWords(board,words)
+    # print result
+    # result = test.findWords([], [])
+    # print result
