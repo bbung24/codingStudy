@@ -3,6 +3,7 @@
 '''
 This file is for cracking the coding interview Chapter 1 : Arrays and String
 '''
+import unittest
 
 #------------------------------------------------------------------------------
 def all_unique(input):
@@ -216,8 +217,54 @@ def isSubstring(word, string):
     else:
         return False
 
+#------------------------------------------------------------------------------
+def pal_perm(text):
+    count = {}
+    odd_flag = False
+    for letter in text:
+        letter = letter.lower()
+        if is_char(letter):
+            if letter in count:
+                count[letter] += 1
+            else:
+                count[letter] = 1
+    for letter in count:
+        if count[letter] % 2 != 0:
+            if odd_flag:
+                return False
+            else:
+                odd_flag = True
+    return True
 
+def is_char(c):
+    a = ord('a')
+    z = ord('z')
+    val = ord(c)
 
+    if a <= val <= z:
+        return True
+    else:
+        return False
+
+class Test(unittest.TestCase):
+    '''Test Cases'''
+    data = [
+        ('Tact Coa', True),
+        ('jhsabckuj ahjsbckj', True),
+        ('Able was I ere I saw Elba', True),
+        ('So patient a nurse to nurse a patient so', False),
+        ('Random Words', False),
+        ('Not a Palindrome', False),
+        ('no x in nixon', True),
+        ('azAZ', True)]
+
+    def test_pal_perm(self):
+        for [test_string, expected] in self.data:
+            actual = pal_perm(test_string)
+            self.assertEqual(actual, expected)
+
+if __name__ == "__main__":
+    unittest.main()
 
 
 
