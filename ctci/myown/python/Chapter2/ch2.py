@@ -382,9 +382,61 @@ def isPalindrome(ll):
 		node2 = node2.next
 	return True
 
+#------------------------------------------------------------------------------
+# 6th edition
+def intersect(ll1, ll2):
+	"""
+	2.7 Intersection
+	Given two (singly) linked lists, determine if the two lists intersect. Return
+	the intersecting node. Note that the intersection is defined based on reference,
+	not value. That is, if the kth node of the first linked list is the exact same
+	node (by reference) as the jth node of the second linked list, then they are
+	intersecting.
+	"""
+	if ll1 == None or ll2 == None:
+		return None
+	check = {}
+	node = ll1
+	while node != None:
+		if node in check:
+			break
+		check[node] = 0
+		node = node.next
+	node = ll2
+	while node != None:
+		if node in check:
+			return node
+		node = node.next
+	return None
 
+import unittest
+class Test(unittest.TestCase):
+    '''Test Cases'''
+    def test_intersect(self):
+    	n1 = Node(1)
+    	n2 = Node(2)
+    	n3 = Node(3)
+    	n4 = Node(1)
+    	n5 = Node(2)
 
+    	ll1 = None
+    	n1.next = n2
+    	n2.next = n3
+    	ll2 = n1
+    	actual = intersect(ll1, ll2)
+    	self.assertEqual(actual, None)
 
+    	n4.next = n5
+    	ll1 = n4
+    	actual = intersect(ll1, ll2)
+    	self.assertEqual(actual, None)
+
+    	n5.next = n1
+    	actual = intersect(ll1, ll2)
+    	self.assertEqual(actual, n1)
+        
+if __name__ == "__main__":
+    unittest.main()
 
 
 
