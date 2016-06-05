@@ -219,6 +219,13 @@ def isSubstring(word, string):
 
 #------------------------------------------------------------------------------
 def pal_perm(text):
+    """
+    1.4 Palindrome Permutation: 
+    Given a string, write a function to check if it is a permutation of a 
+    palindrome. A palindrome is a word or phrase that is the same forwards and
+    backwards. A permutation is a rearrangement of letters. The palindrome does
+    not need to be limited to just dictionary words.
+    """
     count = {}
     odd_flag = False
     for letter in text:
@@ -246,21 +253,42 @@ def is_char(c):
     else:
         return False
 
+
+#------------------------------------------------------------------------------
+def one_away(s1, s2):
+    """
+    1.5 One Away
+    There are three types of edits that can be performed on strings: insert a 
+    character, remove a character, or repalce a character. Given two strings,
+    write a function to check if they are one edit (or zero edits) away.
+    """
+    
+
 class Test(unittest.TestCase):
     '''Test Cases'''
-    data = [
-        ('Tact Coa', True),
-        ('jhsabckuj ahjsbckj', True),
-        ('Able was I ere I saw Elba', True),
-        ('So patient a nurse to nurse a patient so', False),
-        ('Random Words', False),
-        ('Not a Palindrome', False),
-        ('no x in nixon', True),
-        ('azAZ', True)]
-
     def test_pal_perm(self):
-        for [test_string, expected] in self.data:
+        data = [
+            ('Tact Coa', True),
+            ('jhsabckuj ahjsbckj', True),
+            ('Able was I ere I saw Elba', True),
+            ('So patient a nurse to nurse a patient so', False),
+            ('Random Words', False),
+            ('Not a Palindrome', False),
+            ('no x in nixon', True),
+            ('azAZ', True)]
+        for [test_string, expected] in data:
             actual = pal_perm(test_string)
+            self.assertEqual(actual, expected)
+
+    def test_one_away(self):
+        data = [
+            ('pale', 'ple', True),
+            ('pales', 'pale', True),
+            ('pale', 'bale', True),
+            ('pale', 'ble', False)
+        ]
+        for [test_s1, test_s2, expected] in data:
+            actual = one_away(test_s1, test_s2)
             self.assertEqual(actual, expected)
 
 if __name__ == "__main__":
