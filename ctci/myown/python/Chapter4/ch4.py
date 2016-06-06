@@ -4,11 +4,15 @@
 This file is for cracking the coding interview Chapter 4 : Trees and Graphs.
 '''
 
-class BinaryTree(object):
+class Node(object):
 	def __init__(self, value):
 		self.left = None
 		self.right = None
 		self.value = value
+
+class BinaryTree(object):
+	def __init__(self):
+		self.root = None
 
 #------------------------------------------------------------------------------
 def checkBinary(tree):
@@ -110,5 +114,65 @@ def testSet():
 
 
 
+#------------------------------------------------------------------------------
+# 6th edition.
+def min_tree(array):
+	"""
+	4.2 Minimal Tree
+	Given a sorted (increasing order) array with unique integer elements, write
+	an algorithm to create a binary search tree with minimal height.
+	"""
+	graph = BinaryTree()
+	graph.root = min_tree_helper(array, 0, len(array)-1)
+	return graph
 
+def min_tree_helper(array, left, right):
+	if left > right:
+		return
+	mid_index = (left + right) / 2
+	mid_val = array[mid_index]
+	node = Node(mid_val)
+	node.left = min_tree_helper(array, left, mid_index-1)
+	node.right = min_tree_helper(array, mid_index+1, right)
+	return node
 
+import unittest
+class Test(unittest.TestCase):
+	def test_min_tree(self):
+		array = [1, 2, 3, 4, 5]
+		graph = BinaryTree()
+		graph.root = Node(3)
+		n = graph.root
+		n.left = Node(1)
+		n.right = Node(4)
+		n.left.right = Node(2)
+		n.right.right = Node(5)
+		actual = min_tree(array)
+		self.assertEqual(self.check_graph(actual.root, graph.root), True)
+
+		array = [1, 2, 3, 4, 5, 6, 7, 8]
+		graph = BinaryTree()
+		graph.root = Node(4)
+		n = graph.root
+		n.left = Node(2)
+		n.right = Node(6)
+		n.left.left = Node(1)
+		n.left.right = Node(3)
+		n.right.left = Node(5)
+		n.right.right = Node(7)
+		n.right.right.right = Node(8)
+		actual = min_tree(array)
+		self.assertEqual(self.check_graph(actual.root, graph.root), True)
+
+	def check_graph(self, g1, g2):
+		if g1 == None and g2 == None:
+			return True
+		elif g1 == None or g2 == None:
+			return False
+		if g1.value == g2.value:
+			return self.check_graph(g1.left, g2.left) and self.check_graph(g1.right, g2.right)
+		else:
+			return False
+
+if __name__ == "__main__":
+	unittest.main()
