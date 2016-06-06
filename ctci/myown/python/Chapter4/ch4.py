@@ -4,15 +4,16 @@
 This file is for cracking the coding interview Chapter 4 : Trees and Graphs.
 '''
 
-class Node(object):
-	def __init__(self, value):
-		self.left = None
-		self.right = None
-		self.value = value
+from ..db import TNode, BinaryTree, LNode, LinkedList
+# class Node(object):
+# 	def __init__(self, value):
+# 		self.left = None
+# 		self.right = None
+# 		self.value = value
 
-class BinaryTree(object):
-	def __init__(self):
-		self.root = None
+# class BinaryTree(object):
+# 	def __init__(self):
+# 		self.root = None
 
 #------------------------------------------------------------------------------
 def checkBinary(tree):
@@ -78,14 +79,9 @@ def existsRoute(a, b):
 		if n not in checked:
 			check_list.put((n,a))
 			checked.add(n)
-	print check_list.empty()
 	while not check_list.empty():
 		node, target = check_list.get()
-		print check_list
-		print checked
-		print node
 		for n in node.neighbors:
-			print n
 			if n == target:
 				return True
 			if n not in checked:
@@ -93,7 +89,7 @@ def existsRoute(a, b):
 				checked.add(n)
 	return False
 
-def testSet():
+def existsRouteSet():
 	one = DirectedTree(1)
 	two = DirectedTree(2)
 	three = DirectedTree(3)
@@ -131,38 +127,90 @@ def min_tree_helper(array, left, right):
 		return
 	mid_index = (left + right) / 2
 	mid_val = array[mid_index]
-	node = Node(mid_val)
+	node = TNode(mid_val)
 	node.left = min_tree_helper(array, left, mid_index-1)
 	node.right = min_tree_helper(array, mid_index+1, right)
 	return node
+
+#------------------------------------------------------------------------------
+def list_of_depths(tree):
+	"""
+	4.3 List of Depths
+	Given a binary tree, design an algorithm which creates a linked list of all
+	the nodes at each depth (e.g., if you have a tree with depth D, you'll have
+	D linked lists).
+	"""
+	if tree.root == None:
+		return []
+	result = []
+	currentDepth = []
+	nextDepth = []
+	node = tree.root
+	ll = LinkedList()
+	while node != None:
+		ll.addNode(node.value)
+		if node.left != None:
+			nextDepth.append(node.left)
+		if node.right != None:
+			nextDepth.append(node.right)
+		if len(currentDepth) == 0 and len(nextDepth) != 0:
+			currentDepth = nextDepth
+			nextDepth = []
+			node = currentDepth.pop()
+			result.append(ll)
+			ll = LinkedList()
+		elif len(currentDepth) != 0:
+			node = currentDepth.pop()
+		else:
+			break
+	result.append(ll)
+	return result
+
 
 import unittest
 class Test(unittest.TestCase):
 	def test_min_tree(self):
 		array = [1, 2, 3, 4, 5]
 		graph = BinaryTree()
-		graph.root = Node(3)
+		graph.root = TNode(3)
 		n = graph.root
-		n.left = Node(1)
-		n.right = Node(4)
-		n.left.right = Node(2)
-		n.right.right = Node(5)
+		n.left = TNode(1)
+		n.right = TNode(4)
+		n.left.right = TNode(2)
+		n.right.right = TNode(5)
 		actual = min_tree(array)
 		self.assertEqual(self.check_graph(actual.root, graph.root), True)
 
+	def test_min_tree2(self):
 		array = [1, 2, 3, 4, 5, 6, 7, 8]
 		graph = BinaryTree()
-		graph.root = Node(4)
+		graph.root = TNode(4)
 		n = graph.root
-		n.left = Node(2)
-		n.right = Node(6)
-		n.left.left = Node(1)
-		n.left.right = Node(3)
-		n.right.left = Node(5)
-		n.right.right = Node(7)
-		n.right.right.right = Node(8)
+		n.left = TNode(2)
+		n.right = TNode(6)
+		n.left.left = TNode(1)
+		n.left.right = TNode(3)
+		n.right.left = TNode(5)
+		n.right.right = TNode(7)
+		n.right.right.right = TNode(8)
 		actual = min_tree(array)
 		self.assertEqual(self.check_graph(actual.root, graph.root), True)
+
+	def test_list_of_depths(self):
+		graph = BinaryTree()
+		graph.root = TNode(4)
+		n = graph.root
+		n.left = TNode(2)
+		n.right = TNode(6)
+		n.left.left = TNode(1)
+		n.left.right = TNode(3)
+		n.right.left = TNode(5)
+		n.right.right = TNode(7)
+		n.right.right.right = TNode(8)
+		actual = list_of_depths(graph)
+		for l in actual:
+			print l
+		pass # Good
 
 	def check_graph(self, g1, g2):
 		if g1 == None and g2 == None:
