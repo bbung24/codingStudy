@@ -193,6 +193,38 @@ def is_balanced_helper(node):
 	else:
 		return max(left, right) + 1
 
+#------------------------------------------------------------------------------
+def validate_bst(tree):
+	"""
+	4.5 Validate BST
+	Implement a function to check if a binary tree is a binary search tree.
+	"""
+	if tree.root == None:
+		return True
+	try:
+		validate_helper(tree.root)
+	except:
+		return False
+	else:
+		return True
+
+def validate_helper(node):
+	max_val = node.value
+	min_val = node.value
+	if node.left:
+		(left_max, left_min) = validate_helper(node.left)
+		if left_max > node.value:
+			raise Exception("Not BST")
+		else:
+			min_val = left_min
+	if node.right:
+		(right_max, right_min) = validate_helper(node.right)
+		if right_min < node.value:
+			raise Exception("Not BST")
+		else:
+			max_val = right_max
+	return max_val, min_val
+
 import unittest
 class Test(unittest.TestCase):
 	def test_min_tree(self):
@@ -234,8 +266,8 @@ class Test(unittest.TestCase):
 		n.right.right = TNode(7)
 		n.right.right.right = TNode(8)
 		actual = list_of_depths(graph)
-		for l in actual:
-			print l
+		# for l in actual:
+		# 	print l
 		pass # Good
 
 	def check_graph(self, g1, g2):
@@ -278,6 +310,65 @@ class Test(unittest.TestCase):
 		n.left.left.left = TNode(5)
 		actual = is_balanced(tree)
 		self.assertEqual(False, actual)
+
+	def test_validate_bst(self):
+		tree = BinaryTree()
+		tree.root = TNode(3)
+		n = tree.root
+		n.left = TNode(1)
+		n.right = TNode(3)
+		n.left.right = TNode(4)
+		actual = validate_bst(tree)
+		self.assertEqual(False, actual)
+
+	def test_validate_bst2(self):
+		tree = BinaryTree()
+		tree.root = TNode(3)
+		n = tree.root
+		n.left = TNode(1)
+		n.right = TNode(3)
+		n.left.right = TNode(2)
+		actual = validate_bst(tree)
+		self.assertEqual(True, actual)	
+
+	def test_validate_bst3(self):
+		tree = BinaryTree()
+		tree.root = TNode(4)
+		n = tree.root
+		n.left = TNode(3)
+		n.left.left = TNode(2)
+		n.left.left.left = TNode(1)
+		actual = validate_bst(tree)
+		self.assertEqual(True, actual)
+
+	def test_validate_bst4(self):
+		tree = BinaryTree()
+		tree.root = TNode(1)
+		n = tree.root
+		n.right = TNode(2)
+		n.right.right = TNode(3)
+		n.right.right.right = TNode(4)
+		actual = validate_bst(tree)
+		self.assertEqual(True, actual)
+
+	def test_validate_bst5(self):
+		tree = BinaryTree()
+		tree.root = TNode(2)
+		n = tree.root
+		n.right = TNode(4)
+		n.right.left = TNode(1)
+		actual = validate_bst(tree)
+		self.assertEqual(False, actual)
+
+	def test_validate_bst6(self):
+		tree = BinaryTree()
+		tree.root = TNode(2)
+		n = tree.root
+		n.right = TNode(4)
+		n.right.left = TNode(3)
+		actual = validate_bst(tree)
+		self.assertEqual(True, actual)
+
 
 if __name__ == "__main__":
 	unittest.main()
