@@ -166,6 +166,32 @@ def list_of_depths(tree):
 	result.append(ll)
 	return result
 
+#------------------------------------------------------------------------------
+def is_balanced(tree):
+	"""
+	4.4 Check Balanced
+	Implement a function to check if a binary tree is balanced. For the purposes
+	of this question, a balanced tree is defined to be a tree such that the heights
+	of the two subtrees of any node never differ by more than one.
+	"""
+	if tree.root == None:
+		return False
+	try:
+		is_balanced_helper(tree.root)
+	except:
+		return False
+	else:
+		return True
+
+def is_balanced_helper(node):
+	if node == None:
+		return 0
+	left = is_balanced_helper(node.left)
+	right = is_balanced_helper(node.right)
+	if abs(left - right) > 1:
+		raise Exception('Not Balanced Tree')
+	else:
+		return max(left, right) + 1
 
 import unittest
 class Test(unittest.TestCase):
@@ -221,6 +247,37 @@ class Test(unittest.TestCase):
 			return self.check_graph(g1.left, g2.left) and self.check_graph(g1.right, g2.right)
 		else:
 			return False
+
+	def test_is_balanced(self):
+		tree = BinaryTree()
+		tree.root = TNode(1)
+		n = tree.root
+		n.left = TNode(2)
+		n.right = TNode(3)
+		actual = is_balanced(tree)
+		self.assertEqual(True, actual)
+
+	def test_is_balanced2(self):
+		tree = BinaryTree()
+		tree.root = TNode(1)
+		n = tree.root
+		n.left = TNode(2)
+		n.right = TNode(3)
+		n.left.left = TNode(4)
+		n.left.right = TNode(5)
+		actual = is_balanced(tree)
+		self.assertEqual(True, actual)
+
+	def test_is_balanced3(self):
+		tree = BinaryTree()
+		tree.root = TNode(1)
+		n = tree.root
+		n.left = TNode(2)
+		n.right = TNode(3)
+		n.left.left = TNode(4)
+		n.left.left.left = TNode(5)
+		actual = is_balanced(tree)
+		self.assertEqual(False, actual)
 
 if __name__ == "__main__":
 	unittest.main()
