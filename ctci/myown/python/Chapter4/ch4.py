@@ -4,7 +4,7 @@
 This file is for cracking the coding interview Chapter 4 : Trees and Graphs.
 '''
 
-from ..db import TNode, BinaryTree, LNode, LinkedList
+from ..db import TNode, BinaryTree, LNode, LinkedList, DirectedTreeNode
 # class Node(object):
 # 	def __init__(self, value):
 # 		self.left = None
@@ -46,18 +46,6 @@ def checkBinary(tree):
 	return True
 
 #------------------------------------------------------------------------------
-class DirectedTree(object):
-	def __init__(self, value):
-		self.value = value
-		self.neighbors = []
-
-	def __str__(self):
-		return 'DirectedTree('+str(self.value)+'):'+str(self.neighbors)
-
-	def __repr__(self):
-		return self.__str__()
-
-#------------------------------------------------------------------------------
 def existsRoute(a, b):
 	'''
 	4.2
@@ -90,14 +78,14 @@ def existsRoute(a, b):
 	return False
 
 def existsRouteSet():
-	one = DirectedTree(1)
-	two = DirectedTree(2)
-	three = DirectedTree(3)
-	four = DirectedTree(4)
-	five = DirectedTree(5)
-	six = DirectedTree(6)
-	seven = DirectedTree(7)
-	eight = DirectedTree(8)
+	one = DirectedTreeNode(1)
+	two = DirectedTreeNode(2)
+	three = DirectedTreeNode(3)
+	four = DirectedTreeNode(4)
+	five = DirectedTreeNode(5)
+	six = DirectedTreeNode(6)
+	seven = DirectedTreeNode(7)
+	eight = DirectedTreeNode(8)
 	two.neighbors.append(one)
 	one.neighbors.append(three)
 	one.neighbors.append(four)
@@ -225,8 +213,226 @@ def validate_helper(node):
 			max_val = right_max
 	return max_val, min_val
 
+#------------------------------------------------------------------------------
+def successor(node):
+	"""
+	4.6 Successor
+	Write an algorithm to find the "next" node (i.e., in-order successor) of
+	a given node in a binary search tree. You may assume that each node has a link
+	to its parent.
+	"""
+	if node.right:
+		return recursive_down(node.right)
+	return recursive_up(node)
+
+def recursive_down(node):
+	if node.left:
+		return recursive_down(node.left)
+	else:
+		return node
+
+def recursive_up(node):
+	if node.parent:
+		if node.parent.right == node:
+			return recursive_up(node.parent)
+		else:
+			return node.parent
+	else:
+		return None
+
+#------------------------------------------------------------------------------
+def build_order(projects, dependencies):
+	"""
+	4.7 Build Order
+	You are given a list of projects and a list of dependencies (which is a list of
+	pairs of projects, where the second project is dependent on the first project).
+	All of project's dependencies must be built before the project is. Find a build
+	order that will allow the projects to be built. If there is no valid build order,
+	return an error.
+	"""
+	if len(projects) == 0:
+		raise Exception('Impossible')
+	graph = {}
+	queue = []
+	dep = [x for x in dependencies]
+	for value in projects:
+		node = DirectedTreeNode(value)
+		node.visited = False
+		graph[value] = node
+		queue.append(node)
+	for value_from, value_to in dependencies:
+		node_to = graph[value_to]
+		node_from = graph[value_from]
+		node_from.neighbors.append(node_to)
+		try:
+			queue.pop(queue.index(node_to))
+		except:
+			pass
+	result = []
+	while len(queue) != 0:
+		node = queue.pop(0)
+		if node.visited:
+			raise Exception('Cycle')
+		node.visited = True
+		result.append(node.value)
+		for n in node.neighbors:
+			if not n in queue:
+				queue.append(n)
+	if len(result) != len(projects):
+		raise Exception('Cycle')
+	return result
+
+#------------------------------------------------------------------------------
+def common_ancestor(n1, n2):
+	"""
+	4.8 First Common Ancestor
+	Design an algorithm and write code to find the first common ancestor
+	of two nodes in a binary tree. Avoid storing additional nodes in a data
+	structure. NOTE: This is not necessarily a binary search tree.
+	"""
+	mark_parents(n1)
+	return mark_parents(n2)
+
+def mark_parents(node):
+	if node == None:
+		return None
+	if hasattr(node, 'visited') and node.visited == True:
+		return node
+	else:
+		node.visited = True
+		return mark_parents(node.parent)
+
+#------------------------------------------------------------------------------
+from itertools import permutations
+def bst_sequences(tree):
+	"""
+	4.9 BST Sequences
+	A binary search tree was created by traversing through an array from left to
+	right and inserting each element. Given a binary search tree with distict
+	elements, print all possible arrays that could have led to this tree.
+	"""
+	if tree.root == None:
+		return
+	depth_nodes = build_depth_nodes(tree)
+	result = []
+	print_recursive(depth_nodes, 0, '{', result)
+	return result
+	
+def print_recursive(dn, depth, string, result):
+	if not depth in dn:
+		result.append(string[:-1] + '}')
+	else:
+		for p in permutations(dn[depth]):
+			next = string
+			for n in p:
+				next += str(n.value) + ','
+			print_recursive(dn, depth+1, next, result)
+
+def build_depth_nodes(tree):
+	queue = []
+	depth = 0
+	depth_nodes = {}
+	next_depth_node = tree.root
+	queue.append(tree.root)
+	while len(queue) != 0:
+		node = queue.pop(0)
+		if node.left:
+			queue.append(node.left)
+		if node.right:
+			queue.append(node.right)
+		if not depth in depth_nodes:
+			depth_nodes[depth] = []
+		depth_nodes[depth].append(node)
+		if node == next_depth_node and len(queue) > 0:
+			depth += 1
+			next_depth_node = queue[-1]
+	return depth_nodes
+
+
+#------------------------------------------------------------------------------
 import unittest
 class Test(unittest.TestCase):
+	def test_bst_sequence(self):
+		graph = BinaryTree()
+		graph.root = TNode(4)
+		n = graph.root
+		n.left = TNode(2)
+		n.right = TNode(6)
+		n.left.left = TNode(1)
+		n.left.right = TNode(3)
+		n.right.left = TNode(5)
+		n.right.right = TNode(7)
+		bst_sequences(graph)
+
+	def initialize_common_ancestor(self):
+		n1 = TNode(1)
+		n2 = TNode(2)
+		n3 = TNode(3)
+		n4 = TNode(4)
+		n5 = TNode(5)
+		n6 = TNode(6)
+		n7 = TNode(7)
+		n8 = TNode(8)
+		n1.left = n2
+		n2.parent = n1
+		n1.right = n3
+		n3.parent = n1
+		n2.left = n4
+		n4.parent = n2
+		n2.right = n5
+		n5.parent = n2
+		n3.left = n6
+		n6.parent = n3
+		n3.right = n7
+		n7.parent = n3
+		return n1, n2, n3, n4, n5, n6, n7, n8
+
+	def test_common_ancestor(self):
+		n1, n2, n3, n4, n5, n6, n7, n8 = self.initialize_common_ancestor()
+		actual = common_ancestor(n4, n7)
+		self.assertEqual(n1, actual)
+		n1, n2, n3, n4, n5, n6, n7, n8 = self.initialize_common_ancestor()
+		actual = common_ancestor(n4, n5)
+		self.assertEqual(n2, actual)
+		n1, n2, n3, n4, n5, n6, n7, n8 = self.initialize_common_ancestor()
+		actual = common_ancestor(n6, n7)
+		self.assertEqual(n3, actual)
+		n1, n2, n3, n4, n5, n6, n7, n8 = self.initialize_common_ancestor()
+		actual = common_ancestor(n3, n7)
+		self.assertEqual(n3, actual)
+		n1, n2, n3, n4, n5, n6, n7, n8 = self.initialize_common_ancestor()	
+		actual = common_ancestor(n4, n8)
+		self.assertEqual(None, actual)
+
+	def test_build_order(self):
+		projects = ['a','b','c','d','e','f']
+		dependencies = [('a','d'), ('f','b'), ('b','d'), ('f','a'), ('d','c')]
+		actual = build_order(projects, dependencies)
+		self.assertEqual(['e','f','b','a','d','c'], actual)
+
+	def test_build_order2(self):
+		projects = ['a','b','c','d','e','f']
+		dependencies = [('a','d'), ('d','b'), ('b','f'), ('f','a'), ('d','c')]
+		with self.assertRaises(Exception):
+			actual = build_order(projects, dependencies)
+
+	def test_successor(self):
+		n1 = TNode(1)
+		n2 = TNode(2)
+		n3 = TNode(3)
+		tree = BinaryTree()
+		tree.root = n2
+		n2.left = n1
+		n1.parent = n2
+		n2.right = n3
+		n3.parent = n2
+		actual = successor(n1)
+		self.assertEqual(n2, actual)
+		actual = successor(n2)
+		self.assertEqual(n3, actual)
+		actual = successor(n3)
+		self.assertEqual(None, actual)
+
 	def test_min_tree(self):
 		array = [1, 2, 3, 4, 5]
 		graph = BinaryTree()
@@ -368,7 +574,6 @@ class Test(unittest.TestCase):
 		n.right.left = TNode(3)
 		actual = validate_bst(tree)
 		self.assertEqual(True, actual)
-
 
 if __name__ == "__main__":
 	unittest.main()

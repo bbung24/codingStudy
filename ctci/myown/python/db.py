@@ -54,7 +54,7 @@ class LinkedList:
                 break
             else:
                 current = current.next
-                
+
 class StackWithMin(object):
     def __init__(self, storage = []):
         self.storage = storage
@@ -89,7 +89,23 @@ class TNode(object):
         self.left = None
         self.right = None
         self.value = value
+        self.parent = None
+    def __str__(self):
+        return "TNode("+str(self.value)+")"
+    def __repr__(self):
+        return self.__str__()
 
 class BinaryTree(object):
     def __init__(self):
         self.root = None
+
+class DirectedTreeNode(object):
+    def __init__(self, value):
+        self.value = value
+        self.neighbors = []
+
+    def __str__(self):
+        return 'DirectedTree('+str(self.value)+'):'+str(self.neighbors)
+
+    def __repr__(self):
+        return self.__str__()
