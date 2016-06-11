@@ -348,10 +348,72 @@ def build_depth_nodes(tree):
 			next_depth_node = queue[-1]
 	return depth_nodes
 
+#------------------------------------------------------------------------------
+def check_subtree(t1, t2):
+	"""
+	4.10 Check Subtree
+	T1 and T2 are two very large binary trees, with T1 much bigger than T2.
+	Create an algorithm to determine if T2 is a subtree of T1.
+	A tree T2 is a subtree of T1 if there exists a node n in T1 such that the
+	subtree of n is identical to T2. That is, if you cut off the tree at node n,
+	the two trees would be identical.
+	"""
+	if t1.root == None or t2.root == None:
+		return False
+	queue = []
+	queue.append(t1.root)
+	n2 = t2.root
+	while len(queue) > 0:
+		node = queue.pop(0)
+		if node.value == n2.value and are_trees_equal(node, n2):
+			return True
+		if node.left: queue.append(node.left)
+		if node.right: queue.append(node.right)
+	return False
+
+def are_trees_equal(t1, t2):
+	if t1 == None and t2 == None:
+		return True
+	if t1 == None or t2 == None:
+		return False
+	if t1.value != t2.value:
+		return False
+	left = are_trees_equal(t1.left, t2.left)
+	right = are_trees_equal(t1.right, t2.right)
+	if left and right:
+		return True
+	else:
+		return False
+
 
 #------------------------------------------------------------------------------
 import unittest
 class Test(unittest.TestCase):
+	def test_check_subtree(self):
+		t1 = BinaryTree()
+		t1.root = TNode(4)
+		n = t1.root
+		n.left = TNode(2)
+		n.right = TNode(6)
+		n.left.left = TNode(1)
+		n.left.right = TNode(3)
+		n.right.left = TNode(5)
+		n.right.right = TNode(7)
+		t2 = BinaryTree()
+		t2.root = TNode(2)
+		n2 = t2.root
+		n2.left = TNode(1)
+		n2.right = TNode(3)
+		actual = check_subtree(t1, t2)
+		self.assertEqual(True, actual)
+		t3 = BinaryTree()
+		t3.root = TNode(2)
+		n3 = t3.root
+		n3.left = TNode(3)
+		n3.right = TNode(5)
+		actual = check_subtree(t1, t3)
+		self.assertEqual(False, actual)
+
 	def test_bst_sequence(self):
 		graph = BinaryTree()
 		graph.root = TNode(4)
