@@ -385,6 +385,29 @@ def are_trees_equal(t1, t2):
 	else:
 		return False
 
+#------------------------------------------------------------------------------
+"""
+4.11 Random Node: You are implementing a binary tree class from scratch which,
+in addition to insert, find, and delete, has a method getRandomNode() which
+returns a random node from the tree. All nodes should be equally likely to be
+chosen. Design and implement an algorithm for getRandomNode, and explain how 
+you would implement the rest of the methods.
+
+My thought process was right. Maybe little help from interviewer can get me
+most efficient way of implementing.
+""" 
+
+#------------------------------------------------------------------------------
+def paths_with_sum(tree):
+	"""
+	4.12 Paths with Sum
+	You are given a binary tree in which each node contains an integer value (which
+	might be positive or negative). Design an algorithm to count the number of
+	paths that sum to a given value. The path does not need to start or end at the
+	root or a leaf, but it must go downwards (traveling only from parent nodes to
+	child nodes).
+	"""
+	pass
 
 #------------------------------------------------------------------------------
 import unittest
