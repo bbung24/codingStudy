@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 '''
-This file is for cracking the coding interview Chapter 8 : Object-Oridented Design
+This file is for cracking the coding interview Chapter 8 : Recursive and Dynamic Programming
 '''
 
 #------------------------------------------------------------------------------

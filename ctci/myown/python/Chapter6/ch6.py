@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 '''
-This file is for cracking the coding interview Chapter 6 : Brain Teasers.
+This file is for cracking the coding interview Chapter 6 : Math and logic puzzles.
 '''
 # Examplify, Simplify, Generalize, Pattern matching, and Base Case and build.
 #------------------------------------------------------------------------------
