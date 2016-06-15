@@ -117,7 +117,7 @@ def shifted_array_search(arr, num):
     """
     begin = 0
     end = len(arr)-1
-    while begin < end:
+    while begin <= end:
         mid = (begin + end) / 2
         if arr[mid] == num:
             return mid
