@@ -80,7 +80,33 @@ def swap(arr, index1, index2):
     arr[index1] = temp
 
 #------------------------------------------------------------------------------
+def find_sum(arr, limit):
+    """
+    Given a package with a weight limit and an array arr of item weights, 
+    how can you most efficiently find two items with sum of weights that equals 
+    the weight limit?
+
+    Your function should return 2 such indices of item weights or -1 
+    if such pair doesn't exist.
+    What is the runtime and space complexity of your solution?
+    """
+    flag = {}
+    for index, number in enumerate(arr):
+        pair = limit - number
+        if pair in flag:
+            return [flag[pair], index]
+        else:
+            flag[number] = index
+    return -1
+
+#------------------------------------------------------------------------------
 class Test(unittest.TestCase):
+    def test_find_sum(self):
+        arr = [1, 2, 3, 4]
+        limit = 6
+        actual = find_sum(arr, limit)
+        self.assertEqual([1,3], actual)
+        
     def test_sent_rev1(self):
         arr = [ 'p', 'e', 'r', 'f', 'e', 'c', 't', ' ', 'm', 'a', 'k', 'e', 's', ' ', 'p', 'r', 'a', 'c', 't', 'i', 'c', 'e' ]
         expected = [ 'p', 'r', 'a', 'c', 't', 'i', 'c', 'e', ' ', 'm', 'a', 'k', 'e', 's', ' ', 'p', 'e', 'r', 'f', 'e', 'c', 't' ]
