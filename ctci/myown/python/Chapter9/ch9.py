@@ -16,5 +16,7 @@ This file is for cracking the coding interview Chapter 9 : System Design and Sca
 	can use any technologies you wish, and can distribute the information to the client applications in
 	any mechanism you choose.
 	'''
-	
+	"""
+	See Ipad and solution for idea.
+	"""
 	
