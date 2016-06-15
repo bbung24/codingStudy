@@ -145,7 +145,7 @@ def shifted_array_search(arr, num):
 
 #------------------------------------------------------------------------------
 class Test(unittest.TestCase):
-    def test_shifted_array_search(self):
+    def test_shifted_array_search1(self):
         shiftArr = [9, 12, 17, 2, 4, 5]
         num = 12
         actual = shifted_array_search(shiftArr, num)
@@ -153,6 +153,24 @@ class Test(unittest.TestCase):
         num = 4
         actual = shifted_array_search(shiftArr, num)
         self.assertEqual(4, actual)
+        num = 3
+        actual = shifted_array_search(shiftArr, num)
+        self.assertEqual(-1, actual)
+
+    def test_shifted_array_search2(self):
+        shiftArr = [9, 12, 17, 2, 4, 5, 8]
+        num = 12
+        actual = shifted_array_search(shiftArr, num)
+        self.assertEqual(1, actual)
+        num = 4
+        actual = shifted_array_search(shiftArr, num)
+        self.assertEqual(4, actual)
+        num = 8
+        actual = shifted_array_search(shiftArr, num)
+        self.assertEqual(6, actual)
+        num = 9
+        actual = shifted_array_search(shiftArr, num)
+        self.assertEqual(0, actual)
         num = 3
         actual = shifted_array_search(shiftArr, num)
         self.assertEqual(-1, actual)
