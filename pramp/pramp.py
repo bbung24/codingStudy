@@ -34,7 +34,59 @@ def eq_index_value_helper(arr, low, high):
         return eq_index_value_helper(arr, low, mid-1)
 
 #------------------------------------------------------------------------------
+def sentence_reverse(arr):
+    """
+    Sentence Reverse
+
+    You are given an array of characters arr, which consists of sequences of 
+    characters (words) separated by space characters. How can you most efficiently 
+    reverse the order of words in the sentence? Explain and code your solution and 
+    analyze the runtime and space complexity.
+
+    For example:
+    [ 'p', 'e', 'r', 'f', 'e', 'c', 't', '  ', 'm', 'a', 'k', 'e', 's', '  ', 'p', 'r', 'a', 'c', 't', 'i', 'c', 'e' ]
+
+    would turn into:
+    [ 'p', 'r', 'a', 'c', 't', 'i', 'c', 'e', '  ', 'm', 'a', 'k', 'e', 's', '  ', 'p', 'e', 'r', 'f', 'e', 'c', 't' ]
+    """
+    result = []
+    words = []
+    index = len(arr)-1
+    word_index = 0
+    word_length = 0
+    while index >= 0:
+        char = arr[index]
+        result.append(char)
+        if char == ' ' and word_length > 0:
+            words.append((word_index, word_length))
+            word_index += word_length + 1
+            word_length = 0
+        else:
+            word_length += 1
+        index -= 1
+    if word_length > 0:
+        words.append((word_index, word_length))
+    for index, length in words:
+        mirror_word(result, index, length)
+    return result
+
+def mirror_word(arr, index, length):
+    for x in range(length/2):
+        swap(arr, index+x, index+(length-1)-x)
+
+def swap(arr, index1, index2):
+    temp = arr[index2]
+    arr[index2] = arr[index1]
+    arr[index1] = temp
+
+#------------------------------------------------------------------------------
 class Test(unittest.TestCase):
+    def test_sent_rev1(self):
+        arr = [ 'p', 'e', 'r', 'f', 'e', 'c', 't', ' ', 'm', 'a', 'k', 'e', 's', ' ', 'p', 'r', 'a', 'c', 't', 'i', 'c', 'e' ]
+        expected = [ 'p', 'r', 'a', 'c', 't', 'i', 'c', 'e', ' ', 'm', 'a', 'k', 'e', 's', ' ', 'p', 'e', 'r', 'f', 'e', 'c', 't' ]
+        actual = sentence_reverse(arr)
+        self.assertEqual(expected, actual)
+
     def test_eq_index_value1(self):
         arr = [-8, 0, 2, 5]
         actual = eq_index_value(arr)
