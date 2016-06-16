@@ -31,6 +31,32 @@ def num_swap_sol(a, b):
 	return a, b
 
 #------------------------------------------------------------------------------
+"""
+16.2 Word Frequencies
+Design a method to find the frequency of occurrences of any given word in 
+a book. What if we were running this algorithm multiple times? 
+"""
+class Book(object):
+	def __init__(self, context):
+		if type(context) != list:
+			raise Exception('Context needs to be given as list of strings.')
+		self.freq = {}
+		self.context = context
+		self.calc_word_freq(context)
+
+	def calc_word_freq(self, book):
+		for word in book:
+			word = word.lower()
+			if word in self.freq:
+				self.freq[word] += 1
+			else:
+				self.freq[word] = 1
+
+	def word_freq(self, word):
+		if word == None: return -1
+		return self.freq.get(word.lower(), -1)
+
+#------------------------------------------------------------------------------
 class TestClass(unittest.TestCase):
 	def test_num_swap(self):
 		actual = num_swap(6, 4)
