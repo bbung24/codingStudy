@@ -60,6 +60,14 @@ def add_without_plus_sol(a, b):
     return add_without_plus_sol(s, c)
 
 #------------------------------------------------------------------------------
+"""
+17.2 Shuffle
+Write a method to shuffle a deck of cards. It must be a perfect shuffle - in
+other words, each of the 52! permutations of the deck has to be equally likely.
+Assume that you are given a random number generator which is perfect.
+"""
+
+#------------------------------------------------------------------------------
 class TestClass(unittest.TestCase):
     def test_add_without_sum(self):
         actual = add_without_plus(6, 4)
