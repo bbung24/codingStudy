@@ -180,6 +180,27 @@ class TestClass(unittest.TestCase):
         expected = [3,5,-1]
         self.run_snakes_and_ladders(sample_input, expected)
 
+    def test_snakes_and_ladders3(self):
+        sample_input = """\
+        3
+        2
+        3 54
+        37 100
+        1
+        56 33
+        2
+        3 57
+        8 100
+        1
+        88 44
+        1
+        7 98
+        1
+        99 1
+        """
+        expected = [3,2,2]
+        self.run_snakes_and_ladders(sample_input, expected)
+
     def run_snakes_and_ladders(self, sample_input, expected):
         sample_input = sample_input.split('\n')
         index = 0
