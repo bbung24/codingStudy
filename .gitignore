@@ -3,6 +3,7 @@ bin/
 include/
 man/
 pip-selfcheck.json
+local/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
