@@ -12,25 +12,6 @@ diagram below).
 How many possible unique paths are there?
 
 Note: m and n will be at most 100.
-
-Case 1:
-1 x 2
-
-2
-x x
-x x
-
-6 = 2^()
-x(2) x(2) x(1)
-x(2) x(2) x(1)
-x(1) x(1) x(1)
-
-20
-x(2) x(2) x(2) x(1)
-x(2) x(2) x(2) x(1)
-x(2) x(2) x(2) x(1)
-x(1) x(1) x(1) x(1)
-
 """
 class Solution(object):
     def uniquePaths(self, m, n):
