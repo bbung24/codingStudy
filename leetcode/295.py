@@ -17,12 +17,15 @@ Design a data structure that supports the following two operations:
     double findMedian() - Return the median of all elements so far.
 
 """
+from heapq import heappush, heappop, heapify, heappushpop
 class MedianFinder:
     def __init__(self):
         """
         Initialize your data structure here.
         """
-        self.nums = []
+        self.left = []
+        self.right = []
+        self.even_length = True
 
     def addNum(self, num):
         """
@@ -30,29 +33,43 @@ class MedianFinder:
         :type num: int
         :rtype: void
         """
-        for index, elem in enumerate(self.nums):
-            if elem >= num:
-                self.nums.insert(index, num)
-                return
+        if len(self.left) == 0 or num <= -1*self.left[0]:
+            if len(self.left) > len(self.right):
+                tmp_num = heappushpop(self.left, -1*num)
+                heappush(self.right, -1*tmp_num)
+            else:
+                heappush(self.left, -1*num)
+        elif len(self.right) == 0 or num >= self.right[0]:
+            if len(self.right) > len(self.left):
+                tmp_num = heappushpop(self.right, num)
+                heappush(self.left, -1*tmp_num)
+            else:
+                heappush(self.right, num)
         else:
-            self.nums.append(num)
-
+            if len(self.left) > len(self.right):
+                tmp_num = heappushpop(self.left, -1*num)
+                heappush(self.right, -1*tmp_num)
+            else:
+                heappush(self.left, -1*num)
+        self.even_length = not self.even_length
+        # print self.left, self.right, self.even_length
 
     def findMedian(self):
         """
         Returns the median of current data stream
         :rtype: float
         """
-        if len(self.nums) % 2 == 0:
-            # length is even so we need to get mean of the two middle value.
-            mid1 = (len(self.nums)-1) / 2
-            mid2 = mid1+1
-            median = (self.nums[mid1] + self.nums[mid2]) / 2.0
-            return median
+        if self.even_length:
+            if len(self.right) == 0:
+                median = -1*self.left[0]
+            else:
+                median = (-1*self.left[0] + self.right[0]) / 2.0
         else:
-            mid = (len(self.nums)-1) / 2
-            median = float(self.nums[mid])
-            return median
+            if len(self.left) > len(self.right):
+                median = -1*self.left[0]
+            else:
+                median = self.right[0]
+        return round(median, 5)
 
 import unittest
 class TestClass(unittest.TestCase):
@@ -116,6 +133,92 @@ class TestClass(unittest.TestCase):
         actual = self.s.findMedian()
         self.assertEqual(actual, expected)
 
+    def test_median_finder3(self):
+        self.s.addNum(12)
+        expected = 12.00000
+        actual = self.s.findMedian()
+        self.assertEqual(actual, expected)
+        self.s.addNum(10)
+        expected = 11.00000
+        actual = self.s.findMedian()
+        self.assertEqual(actual, expected)
+        self.s.addNum(13)
+        expected = 12.00000
+        actual = self.s.findMedian()
+        self.assertEqual(actual, expected)
+        self.s.addNum(11)
+        expected = 11.50000
+        actual = self.s.findMedian()
+        self.assertEqual(actual, expected)
+        self.s.addNum(5)
+        expected = 11.00000
+        actual = self.s.findMedian()
+        self.assertEqual(actual, expected)
+        self.s.addNum(15)
+        expected = 11.50000
+        actual = self.s.findMedian()
+        self.assertEqual(actual, expected)
+        self.s.addNum(1)
+        expected = 11.00000
+        actual = self.s.findMedian()
+        self.assertEqual(actual, expected)
+        self.s.addNum(11)
+        expected = 11.00000
+        actual = self.s.findMedian()
+        self.assertEqual(actual, expected)
+        self.s.addNum(6)
+        expected = 11.00000
+        actual = self.s.findMedian()
+        self.assertEqual(actual, expected)
+        self.s.addNum(17)
+        expected = 11.00000
+        actual = self.s.findMedian()
+        self.assertEqual(actual, expected)
+        self.s.addNum(14)
+        expected = 11.00000
+        actual = self.s.findMedian()
+        self.assertEqual(actual, expected)
+        self.s.addNum(8)
+        expected = 11.00000
+        actual = self.s.findMedian()
+        self.assertEqual(actual, expected)
+        self.s.addNum(17)
+        expected = 11.00000
+        actual = self.s.findMedian()
+        self.assertEqual(actual, expected)
+        self.s.addNum(6)
+        expected = 11.00000
+        actual = self.s.findMedian()
+        self.assertEqual(actual, expected)
+        self.s.addNum(4)
+        expected = 11.00000
+        actual = self.s.findMedian()
+        self.assertEqual(actual, expected)
+        self.s.addNum(16)
+        expected = 11.00000
+        actual = self.s.findMedian()
+        self.assertEqual(actual, expected)
+        self.s.addNum(8)
+        expected = 11.00000
+        actual = self.s.findMedian()
+        self.assertEqual(actual, expected)
+        self.s.addNum(10)
+        expected = 10.50000
+        actual = self.s.findMedian()
+        self.assertEqual(actual, expected)
+        self.s.addNum(2)
+        expected = 10.00000
+        actual = self.s.findMedian()
+        self.assertEqual(actual, expected)
+        self.s.addNum(12)
+        expected = 10.50000
+        actual = self.s.findMedian()
+        self.assertEqual(actual, expected)
+        self.s.addNum(0)
+        expected = 10.00000
+        actual = self.s.findMedian()
+        self.assertEqual(actual, expected)
+        
 # Your MedianFinder object will be instantiated and called as such:
 # mf = MedianFinder()
 # mf.addNum(1)
