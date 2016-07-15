@@ -20,45 +20,17 @@ class TreeNode(object):
         self.right = None
 
 class Solution(object):
-    def isValidBST(self, root):
+    def isValidBST(self, root, lessThan=float('inf'), largerThan=float('-inf')):
         """
         :type root: TreeNode
         :rtype: bool
         """
-        if root == None:
+        if not root:
             return True
-        if root.left:
-            try:
-                mini, maxi = self.getMiniMaxi(root.left)
-            except:
-                return False
-            if maxi >= root.val:
-                return False
-        if root.right:
-            try:
-                mini, maxi = self.getMiniMaxi(root.right)
-            except: 
-                return False
-            if mini <= root.val:
-                return False
-        return True
-        
-    def getMiniMaxi(self, root):
-        minimum = root.val
-        maximum = root.val
-        if root.left:
-            mini, maxi = self.getMiniMaxi(root.left)
-            minimum = min(minimum, mini)
-            maximum = max(maximum, maxi)
-            if maxi >= root.val:
-                raise
-        if root.right:
-            mini, maxi = self.getMiniMaxi(root.right)
-            minimum = min(minimum, mini)
-            maximum = max(maximum, maxi)
-            if mini <= root.val:
-                raise
-        return minimum, maximum
+        if root.val <= largerThan or root.val >= lessThan:
+            return False
+        return (self.isValidBST(root.left, min(root.val, lessThan), largerThan) and
+            self.isValidBST(root.right, lessThan, max(root.val, largerThan)))
 
 import unittest
 class TestClass(unittest.TestCase):
