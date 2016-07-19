@@ -16,6 +16,7 @@ We get the following sequence (ie, for n = 3):
 Given n and k, return the kth permutation sequence.
 
 Note: Given n will be between 1 and 9 inclusive.
+
 """
 class Solution(object):
     def getPermutation(self, n, k):
@@ -24,13 +25,20 @@ class Solution(object):
         :type k: int
         :rtype: str
         """
-        from itertools import permutations
-        array = [x for x in range(1, n+1)]
-        count = 0
-        for x in permutations(array):
-            count += 1
-            if count == k:
-                return ''.join(map(str,x))
+        import math
+        numbers = range(1,n+1)
+        facto = math.factorial(n)
+        result = []
+        while len(numbers) > 0:
+            facto /= len(numbers)
+            index, mod = divmod(k, facto)
+            if mod == 0:
+                index -= 1
+            k = mod
+            result.append(str(numbers.pop(index)))
+        return ''.join(result)
+
+
 
 import unittest
 class TestClass(unittest.TestCase):
