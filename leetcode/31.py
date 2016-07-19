@@ -25,20 +25,25 @@ class Solution(object):
         largest = float('-inf')
         for index in range(len(nums)-1, -1, -1):
             if nums[index] < largest:
-                # There is some value that we can swap that this spot.
-                smallest = nums[index+1]
-                small_index = index+1
-                for j in range(index+2, len(nums)):
+                for j in range(len(nums)-1, index, -1):
                     if nums[index] < nums[j]:
-                        if smallest > nums[j]:
-                            smallest = nums[j]
-                            small_index = j
-                self.swap(nums, index, small_index)
-                nums[index+1:] = sorted(nums[index+1:])
+                        self.swap(nums, index, j)
+                        break
+                i = index+1
+                j = len(nums)-1
+                while i < j:
+                    self.swap(nums, i, j)
+                    i += 1
+                    j -= 1
                 break
             largest = max(largest, nums[index])
         else:
-            nums.sort()
+            i = 0
+            j = len(nums)-1
+            while i < j:
+                self.swap(nums, i, j)
+                i += 1
+                j -= 1
 
     def swap(self, nums, i, j):
         tmp = nums[i]
