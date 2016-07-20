@@ -21,14 +21,13 @@ class Solution(object):
         :type nums: List[int]
         :rtype: List[List[int]]
         """
+        import math
         result = [nums]
         next = nums
-        while True:
+        for a in xrange(math.factorial(len(nums))-1):
             next = self.nextPermutation(next)
-            if next == nums:
-                return result
-            else:
-                result.append(next)
+            result.append(next)
+        return result
 
     def nextPermutation(self, nums):
         """
@@ -37,28 +36,25 @@ class Solution(object):
         :rtype: void Do not return anything, modify nums in-place instead.
         """
         new = [x for x in nums]
-        largest = float('-inf')
-        for index in range(len(new)-1, -1, -1):
-            if new[index] < largest:
-                for j in range(len(new)-1, index, -1):
-                    if new[index] < new[j]:
-                        new[index], new[j] = new[j], new[index]
-                        break
-                i = index+1
-                j = len(new)-1
-                while i < j:
-                    new[i], new[j] = new[j], new[i]
-                    i += 1
-                    j -= 1
+        i = len(new)-1
+        for index in range(len(new)-2, -1, -1):
+            if new[index] < new[index+1]:
+                i = index
                 break
-            largest = max(largest, new[index])
         else:
             i = 0
-            j = len(new)-1
-            while i < j:
-                new[i], new[j] = new[j], new[i]
-                i += 1
-                j -= 1
+        j = len(new) -1
+        for index in range(len(new)-1, i, -1):
+            if new[index] > new[i]:
+                j = index
+                break
+        new[i], new[j] = new[j], new[i]
+        i += 1
+        j = len(new) -1
+        while i < j:
+            new[i], new[j] = new[j], new[i]
+            i += 1
+            j -= 1
         return new
         
 import unittest
