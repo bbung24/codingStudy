@@ -18,23 +18,27 @@ class Solution(object):
         :type nums: List[int]
         :rtype: List[List[int]]
         """
-        # two_sum = {}
-        result = set([])
+        result = []
         nums.sort()
-        for i in range(len(nums)):
+        for i in range(len(nums)-2):
+            if i > 0 and nums[i] == nums[i-1]:
+                continue
             start = i + 1
             end = len(nums) - 1
             need = nums[i] * -1
             while start < end:
                 s = nums[start] + nums[end]
                 if s == need:
-                    result.add((nums[i], nums[start], nums[end]))
-                    start += 1
+                    result.append([nums[i], nums[start], nums[end]])
+                    next = start
+                    while next < len(nums) and nums[next] == nums[start]:
+                        next += 1
+                    start = next
                 elif s < need:
                     start += 1
                 else:
                     end -= 1
-        return map(list, list(result))
+        return result
 
 import unittest
 class TestClass(unittest.TestCase):
